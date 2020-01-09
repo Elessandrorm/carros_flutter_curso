@@ -2,6 +2,7 @@ import 'package:carros/pages/carros/carro.dart';
 import 'package:carros/pages/carros/loripsum_api.dart';
 import 'package:carros/widgets/text.dart';
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class CarroPage extends StatefulWidget {
   Carro carro;
@@ -71,7 +72,8 @@ class _CarroPageState extends State<CarroPage> {
       padding: EdgeInsets.all(16),
       child: ListView(
         children: <Widget>[
-          Image.network(carro.urlFoto),
+          CachedNetworkImage(
+              imageUrl: carro.urlFoto),
           _bloco1(),
           Divider(),
           _bloco2(),
