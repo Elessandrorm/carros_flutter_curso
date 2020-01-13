@@ -25,6 +25,11 @@ class _CarroPageState extends State<CarroPage> {
   void initState() {
     super.initState();
 
+    FavoritoService.isFavorito(carro).then((bool favorito) {
+      setState(() {
+        color = favorito ? Colors.red : Colors.grey;
+      });
+    });
     _loripsumApiBloc.fetch();
   }
 
@@ -166,8 +171,11 @@ class _CarroPageState extends State<CarroPage> {
 
   void _onClickFavorito() async {
 
-    FavoritoService.favoritar(carro);
+    bool favorito = await FavoritoService.favoritar(carro);
 
+    setState(() {
+      color = favorito ? Colors.red : Colors.grey;
+    });
     }
 
   void _onClickShare() {}
