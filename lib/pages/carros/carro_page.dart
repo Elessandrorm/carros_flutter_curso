@@ -1,6 +1,7 @@
 import 'package:carros/pages/carros/carro.dart';
 import 'package:carros/pages/carros/loripsum_api.dart';
 import 'package:carros/pages/favoritos/favorito_service.dart';
+import 'package:carros/pages/favoritos/favoritos_bloc.dart';
 import 'package:carros/widgets/text.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -17,19 +18,16 @@ class CarroPage extends StatefulWidget {
 class _CarroPageState extends State<CarroPage> {
   final _loripsumApiBloc = LoripsumBloc();
 
-  Carro get carro => widget.carro;
+  final _favoritoBloc = FavoritosBloc();
 
-  Color color = Colors.grey;
+  Carro get carro => widget.carro;
 
   @override
   void initState() {
     super.initState();
 
-    FavoritoService.isFavorito(carro).then((bool favorito) {
-      setState(() {
-        color = favorito ? Colors.red : Colors.grey;
-      });
-    });
+    _favoritoBloc.isFavorito(carro);
+
     _loripsumApiBloc.fetch();
   }
 
@@ -78,8 +76,7 @@ class _CarroPageState extends State<CarroPage> {
       padding: EdgeInsets.all(16),
       child: ListView(
         children: <Widget>[
-          CachedNetworkImage(
-              imageUrl: carro.urlFoto),
+          CachedNetworkImage(imageUrl: carro.urlFoto),
           _bloco1(),
           Divider(),
           _bloco2(),
@@ -103,13 +100,18 @@ class _CarroPageState extends State<CarroPage> {
         ),
         Row(
           children: <Widget>[
-            IconButton(
-              icon: Icon(
-                Icons.favorite,
-                color: color,
-                size: 40,
-              ),
-              onPressed: _onClickFavorito,
+            StreamBuilder(
+              stream: _favoritoBloc.streamIsFavorito,
+              builder: (context, snapshot) {
+                return IconButton(
+                  icon: Icon(
+                    Icons.favorite,
+                    color: snapshot.data ? Colors.red : Colors.grey,
+                    size: 40,
+                  ),
+                  onPressed: _onClickFavorito,
+                );
+              },
             ),
             IconButton(
               icon: Icon(
@@ -151,11 +153,9 @@ class _CarroPageState extends State<CarroPage> {
     );
   }
 
-  void _onClickMapa() {
-  }
+  void _onClickMapa() {}
 
-  void _onClickVideo() {
-  }
+  void _onClickVideo() {}
 
   _onClickPopupMenu(String value) {
     switch (value) {
@@ -170,13 +170,11 @@ class _CarroPageState extends State<CarroPage> {
   }
 
   void _onClickFavorito() async {
-
     bool favorito = await FavoritoService.favoritar(carro);
-
     setState(() {
-      color = favorito ? Colors.red : Colors.grey;
+      _favoritoBloc.isFavorito(carro);
     });
-    }
+  }
 
   void _onClickShare() {}
 
