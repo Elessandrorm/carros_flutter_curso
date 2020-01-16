@@ -54,5 +54,6 @@ class FavoritosBloc {
 
   void dispose() {
     _streamController.close();
+    _streamIsFavorito.close();
   }
 }

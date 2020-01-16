@@ -1,7 +1,9 @@
 import 'package:carros/pages/carros/carro.dart';
+import 'package:carros/pages/carros/carro_form_page.dart';
 import 'package:carros/pages/carros/loripsum_api.dart';
 import 'package:carros/pages/favoritos/favorito_service.dart';
 import 'package:carros/pages/favoritos/favoritos_bloc.dart';
+import 'package:carros/utils/nav.dart';
 import 'package:carros/widgets/text.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -102,6 +104,7 @@ class _CarroPageState extends State<CarroPage> {
           children: <Widget>[
             StreamBuilder(
               stream: _favoritoBloc.streamIsFavorito,
+              initialData: false,
               builder: (context, snapshot) {
                 return IconButton(
                   icon: Icon(
@@ -160,6 +163,7 @@ class _CarroPageState extends State<CarroPage> {
   _onClickPopupMenu(String value) {
     switch (value) {
       case "Editar":
+        push(context, CarroFormPage(carro: carro));
         break;
       case "Deletar":
         break;
@@ -183,5 +187,6 @@ class _CarroPageState extends State<CarroPage> {
     super.dispose();
 
     _loripsumApiBloc.dispose();
+    _favoritoBloc.dispose();
   }
 }
