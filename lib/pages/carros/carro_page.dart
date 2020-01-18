@@ -1,8 +1,11 @@
+import 'package:carros/pages/api_response.dart';
 import 'package:carros/pages/carros/carro.dart';
 import 'package:carros/pages/carros/carro_form_page.dart';
+import 'package:carros/pages/carros/carros_api.dart';
 import 'package:carros/pages/carros/loripsum_api.dart';
 import 'package:carros/pages/favoritos/favorito_service.dart';
 import 'package:carros/pages/favoritos/favoritos_bloc.dart';
+import 'package:carros/utils/alert.dart';
 import 'package:carros/utils/nav.dart';
 import 'package:carros/widgets/text.dart';
 import 'package:flutter/material.dart';
@@ -78,7 +81,10 @@ class _CarroPageState extends State<CarroPage> {
       padding: EdgeInsets.all(16),
       child: ListView(
         children: <Widget>[
-          CachedNetworkImage(imageUrl: carro.urlFoto),
+          CachedNetworkImage(
+            imageUrl: carro.urlFoto ??
+                "http://www.livroandroid.com.br/livro/carros/classicos/Chevrolet_Impala_Coupe.png",
+          ),
           _bloco1(),
           Divider(),
           _bloco2(),
@@ -166,6 +172,7 @@ class _CarroPageState extends State<CarroPage> {
         push(context, CarroFormPage(carro: carro));
         break;
       case "Deletar":
+        deletar();
         break;
       case "Share":
         print("Share !!!");
@@ -181,6 +188,19 @@ class _CarroPageState extends State<CarroPage> {
   }
 
   void _onClickShare() {}
+
+  deletar() async {
+    ApiResponse<bool> response = await CarrosApi.delete(carro);
+
+    if (response.ok) {
+      alert(context, response.msg, callback: () {
+        //    EventBus.get(context).sendEvent(CarroEvent("carro_salvo",c.tipo));
+        pop(context);
+      });
+    } else {
+      alert(context, response.msg);
+    }
+  }
 
   @override
   void dispose() {
