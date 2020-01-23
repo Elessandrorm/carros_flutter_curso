@@ -38,6 +38,7 @@ class _CarroPageState extends State<CarroPage> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
@@ -181,9 +182,10 @@ class _CarroPageState extends State<CarroPage> {
   }
 
   void _onClickFavorito() async {
-    bool favorito = await FavoritoService.favoritar(carro);
+    bool favorito = await FavoritoService.favoritar(context, carro);
     setState(() {
       _favoritoBloc.isFavorito(carro);
+      print(favorito);
     });
   }
 

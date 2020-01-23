@@ -1,11 +1,9 @@
 import 'dart:async';
 
 import 'package:carros/pages/carros/carro.dart';
-import 'package:carros/pages/carros/carros_api.dart';
 import 'package:carros/pages/carros/carro_dao.dart';
 import 'package:carros/pages/favoritos/favorito_dao.dart';
 import 'package:carros/pages/favoritos/favorito_service.dart';
-import 'package:carros/utils/network.dart';
 
 class FavoritosBloc {
   final _streamController = StreamController<List<Carro>>();
