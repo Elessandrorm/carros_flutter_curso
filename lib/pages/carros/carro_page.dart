@@ -3,6 +3,7 @@ import 'package:carros/pages/carros/carro.dart';
 import 'package:carros/pages/carros/carro_form_page.dart';
 import 'package:carros/pages/carros/carros_api.dart';
 import 'package:carros/pages/carros/loripsum_api.dart';
+import 'package:carros/pages/carros/video_page.dart';
 import 'package:carros/pages/favoritos/favorito_service.dart';
 import 'package:carros/pages/favoritos/favoritos_bloc.dart';
 import 'package:carros/utils/alert.dart';
@@ -11,6 +12,7 @@ import 'package:carros/utils/nav.dart';
 import 'package:carros/widgets/text.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CarroPage extends StatefulWidget {
   Carro carro;
@@ -39,7 +41,6 @@ class _CarroPageState extends State<CarroPage> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
@@ -51,7 +52,9 @@ class _CarroPageState extends State<CarroPage> {
           ),
           IconButton(
             icon: Icon(Icons.videocam),
-            onPressed: _onClickVideo,
+            onPressed: () {
+              _onClickVideo();
+            },
           ),
           PopupMenuButton<String>(
             onSelected: _onClickPopupMenu,
@@ -164,9 +167,21 @@ class _CarroPageState extends State<CarroPage> {
     );
   }
 
-  void _onClickMapa() {}
+  void _onClickMapa() {
 
-  void _onClickVideo() {}
+
+  }
+
+  void _onClickVideo() {
+    print("> carro video");
+    if (carro.urlVideo != null && carro.urlVideo.isNotEmpty) {
+      launch(carro.urlVideo);
+      //push(context, VideoPage(carro));
+    } else {
+      alert(context,
+          "Erro : Este carro não possui nenhum vídeo");
+    }
+  }
 
   _onClickPopupMenu(String value) {
     switch (value) {
@@ -190,7 +205,10 @@ class _CarroPageState extends State<CarroPage> {
     });
   }
 
-  void _onClickShare() {}
+  void _onClickShare() {
+
+
+  }
 
   deletar() async {
     ApiResponse<bool> response = await CarrosApi.delete(carro);
@@ -198,7 +216,8 @@ class _CarroPageState extends State<CarroPage> {
     if (response.ok) {
       alert(context, response.msg, callback: () {
         //    EventBus.get(context).sendEvent(CarroEvent("carro_salvo",c.tipo));
-        EventBus.get(context).sendEvent(CarroEvent("carro_deletado", carro.tipo));
+        EventBus.get(context).sendEvent(
+            CarroEvent("carro_deletado", carro.tipo));
         pop(context);
       });
     } else {
