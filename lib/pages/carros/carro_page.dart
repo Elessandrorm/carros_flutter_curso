@@ -3,6 +3,7 @@ import 'package:carros/pages/carros/carro.dart';
 import 'package:carros/pages/carros/carro_form_page.dart';
 import 'package:carros/pages/carros/carros_api.dart';
 import 'package:carros/pages/carros/loripsum_api.dart';
+import 'package:carros/pages/carros/mapa_page.dart';
 import 'package:carros/pages/carros/video_page.dart';
 import 'package:carros/pages/favoritos/favorito_service.dart';
 import 'package:carros/pages/favoritos/favoritos_bloc.dart';
@@ -48,7 +49,9 @@ class _CarroPageState extends State<CarroPage> {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.place),
-            onPressed: _onClickMapa,
+            onPressed: () {
+              _onClickMapa();
+            },
           ),
           IconButton(
             icon: Icon(Icons.videocam),
@@ -168,8 +171,13 @@ class _CarroPageState extends State<CarroPage> {
   }
 
   void _onClickMapa() {
-
-
+    print("> carro Mapa");
+    if (carro.latitude != null && carro.longitude != null) {
+      push(context, MapaPage(carro));
+    } else {
+      alert(context,
+          "Erro : Este carro não possui nenhuma latitude/longitude.");
+    }
   }
 
   void _onClickVideo() {

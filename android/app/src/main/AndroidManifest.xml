@@ -13,6 +13,8 @@
         android:networkSecurityConfig = "@xml/network_security_config"
         android:label="carros"
         android:icon="@mipmap/ic_launcher">
+        <meta-data android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyD0KPtxeI3gNrXAYgfUpJg6-IxdZUUmCPk"/>
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
