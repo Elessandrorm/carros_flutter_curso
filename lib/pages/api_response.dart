@@ -3,18 +3,11 @@ class ApiResponse<T> {
   String msg;
   T result;
 
-  ApiResponse.ok(this.result, {String msg}) {
+  ApiResponse.ok({this.result, this.msg}) {
     ok = true;
-    if (msg != null) {
-      this.msg = msg;
-    }
   }
 
-  ApiResponse.error(this.msg) {
+  ApiResponse.error({this.msg}) {
     ok = false;
-  }
-
-  static void setMsg(String msg) {
-    msg = msg;
   }
 }

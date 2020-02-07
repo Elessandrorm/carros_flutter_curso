@@ -14,7 +14,7 @@ class TipoCarro {
 class CarrosApi {
   static Future<List<Carro>> getCarros(String tipo) async {
 
-    var url = 'https://carros-springboot.herokuapp.com/api/v2/carros/tipo/$tipo';
+    var url = 'https://carros-springboot.herokuapp.com/api/v1/carros/tipo/$tipo';
 
     print("GET > $url");
 
@@ -40,7 +40,7 @@ class CarrosApi {
           c.urlFoto = urlFoto;
         }
       }
-      var url = 'http://carros-springboot.herokuapp.com/api/v2/carros';
+      var url = 'http://carros-springboot.herokuapp.com/api/v1/carros';
 
       if (c.id != null) {
         url += "/${c.id}";
@@ -65,24 +65,24 @@ class CarrosApi {
 
         print("'Novo carro: ${carro.id}");
 
-        return ApiResponse.ok(true);
+        return ApiResponse.ok();
       }
 
       if (response.body == null || response.body.isEmpty) {
-        return ApiResponse.error("Não foi possível salvar o carro");
+        return ApiResponse.error(msg:"Não foi possível salvar o carro");
       }
 
-      return ApiResponse.error(mapResponse["error"]);
+      return ApiResponse.error(msg: mapResponse["error"]);
     } on Exception catch (e) {
       print(e);
-      return ApiResponse.error("Não foi possível salvar o carro");
+      return ApiResponse.error(msg: "Não foi possível salvar o carro");
     }
   }
 
   static delete(Carro c) async {
     try {
 
-      var url = 'http://carros-springboot.herokuapp.com/api/v2/carros/${c.id}';
+      var url = 'http://carros-springboot.herokuapp.com/api/v1/carros/${c.id}';
 
       print("DELETE > $url");
 
@@ -94,12 +94,12 @@ class CarrosApi {
       print('Response body: ${response.body}');
 
       if (response.statusCode == 200) {
-        return ApiResponse.ok(true, msg: mapResponse['msg']);
+        return ApiResponse.ok(msg: mapResponse['msg']);
       }
-      return ApiResponse.error("Não foi possível deletar o carro!");
+      return ApiResponse.error(msg: "Não foi possível deletar o carro!");
     } catch (e) {
       print(e);
-      return ApiResponse.error("Não foi possível deletar o carro!");
+      return ApiResponse.error(msg: "Não foi possível deletar o carro!");
     }
   }
 }

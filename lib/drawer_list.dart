@@ -1,36 +1,40 @@
+import 'package:carros/firebase/firebase_service.dart';
 import 'package:carros/pages/login/login_page.dart';
 import 'package:carros/pages/login/usuario.dart';
 import 'package:carros/utils/nav.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class DrawerList extends StatelessWidget {
-
-  UserAccountsDrawerHeader _header(user) {
+  UserAccountsDrawerHeader _header(FirebaseUser user) {
     return UserAccountsDrawerHeader(
-      accountName: Text(user.nome),
-      accountEmail: Text(user.email),
-      currentAccountPicture: CircleAvatar(
-        backgroundImage: NetworkImage(user.urlFoto),
-      ),
+      accountName: Text(user.displayName ?? ""),
+      accountEmail: Text(user.email ?? ""),
+      currentAccountPicture: user.photoUrl != null
+          ? CircleAvatar(
+              backgroundImage: NetworkImage(user.photoUrl),
+            )
+          : FlutterLogo(),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-
-    Future<Usuario> future = Usuario.get();
+    //Future<Usuario> future = Usuario.get();
+    Future<FirebaseUser> future = FirebaseAuth.instance.currentUser();
 
     return SafeArea(
       child: Drawer(
         child: ListView(
           children: <Widget>[
-            FutureBuilder<Usuario>(
+            FutureBuilder<FirebaseUser>(
               future: future,
               builder: (context, snapshot) {
-                Usuario user = snapshot.data;
+                FirebaseUser user = snapshot.data;
 
                 return user != null ? _header(user) : Container();
-            },),
+              },
+            ),
             ListTile(
               leading: Icon(Icons.star),
               title: Text("Favoritos"),
@@ -57,17 +61,16 @@ class DrawerList extends StatelessWidget {
               trailing: Icon(Icons.arrow_forward),
               onTap: () => _onClickLogout(context),
             )
-
           ],
         ),
-
       ),
     );
   }
 
   _onClickLogout(BuildContext context) {
-      Usuario.clear();
-      Navigator.pop(context);
-      push(context, LoginPage(), replace: true);
+    Usuario.clear();
+    FirebaseService().logout();
+    Navigator.pop(context);
+    push(context, LoginPage(), replace: true);
   }
 }

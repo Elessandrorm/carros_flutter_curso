@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:carros/firebase/firebase_service.dart';
 import 'package:carros/pages/api_response.dart';
 import 'package:carros/pages/login/login.api.dart';
 import 'package:carros/pages/login/usuario.dart';
@@ -9,11 +10,12 @@ class LoginBloc{
 
   get streamLoginButton => _streamController.stream;
 
-  Future<ApiResponse<Usuario>> login(String login, String senha) async {
+  Future<ApiResponse> login(String login, String senha) async {
 
     _streamController.add(true);
 
-    ApiResponse response = await LoginApi.login(login, senha);
+    //ApiResponse response = await LoginApi.login(login, senha);
+    ApiResponse response = await FirebaseService().login(login, senha);
 
     _streamController.add(false);
 

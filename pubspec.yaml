@@ -32,6 +32,12 @@ dependencies:
   video_player: ^0.10.5+2
   google_maps_flutter: ^0.5.21+15
 
+  # Firebase
+  flutter_auth_buttons: ^0.6.0
+  firebase_auth: ^0.15.4
+  firebase_core: ^0.4.3+2
+  google_sign_in: ^4.1.1
+
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
