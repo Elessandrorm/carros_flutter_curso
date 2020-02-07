@@ -1,4 +1,3 @@
-import 'package:carros/pages/favoritos/favoritos_bloc.dart';
 import 'package:carros/splash_page.dart';
 import 'package:carros/utils/event_bus.dart';
 import 'package:flutter/material.dart';
@@ -14,12 +13,7 @@ class MyApp extends StatelessWidget {
         Provider<EventBus> (
           create: (context) => EventBus(),
           dispose: (context, bus) => bus.dispose(),
-        ),
-        Provider<FavoritosBloc> (
-          create:  (context) => FavoritosBloc(),
-          dispose: (context, bloc) => bloc.dispose(),
         )
-        ,
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

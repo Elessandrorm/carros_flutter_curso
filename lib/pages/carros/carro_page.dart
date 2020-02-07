@@ -31,13 +31,20 @@ class _CarroPageState extends State<CarroPage> {
 
   Carro get carro => widget.carro;
 
+  Color color = Colors.grey;
+
   @override
   void initState() {
     super.initState();
 
-    _favoritoBloc.isFavorito(carro);
-
     _loripsumApiBloc.fetch();
+
+    //_favoritoBloc.isFavorito(carro);
+    FavoritoService().isFavorito(carro).then((bool favorito) {
+      setState(() {
+        color = favorito ? Colors.red : Colors.grey;
+      });
+    });
   }
 
   @override
@@ -116,7 +123,7 @@ class _CarroPageState extends State<CarroPage> {
         ),
         Row(
           children: <Widget>[
-            StreamBuilder(
+           /* StreamBuilder(
               stream: _favoritoBloc.streamIsFavorito,
               initialData: false,
               builder: (context, snapshot) {
@@ -129,6 +136,14 @@ class _CarroPageState extends State<CarroPage> {
                   onPressed: _onClickFavorito,
                 );
               },
+            )*/
+            IconButton(
+              icon: Icon(
+                Icons.favorite,
+                color: color,
+                size: 40,
+              ),
+              onPressed: _onClickFavorito,
             ),
             IconButton(
               icon: Icon(
@@ -206,9 +221,12 @@ class _CarroPageState extends State<CarroPage> {
   }
 
   void _onClickFavorito() async {
-    bool favorito = await FavoritoService.favoritar(context, carro);
+    bool favorito = await FavoritoService().favoritar(carro);
+
     setState(() {
-      _favoritoBloc.isFavorito(carro);
+      //_favoritoBloc.isFavorito(carro);
+      color = favorito ? Colors.red : Colors.grey;
+
       print(favorito);
     });
   }

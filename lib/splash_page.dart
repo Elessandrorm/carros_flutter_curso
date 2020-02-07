@@ -4,6 +4,7 @@ import 'package:carros/utils/nav.dart';
 import 'package:carros/utils/sql/db_helper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:carros/firebase/firebase_service.dart';
 
 import 'pages/login/usuario.dart';
 
@@ -34,10 +35,12 @@ class _SplashPageState extends State<SplashPage> {
 //    });
 
     Future.wait([futureA, futureB, futureC]).then((List values) {
-      FirebaseUser user = values[2];
-      print(user);
+      FirebaseUser fUser = values[2];
+      print(fUser);
 
-      if (user != null) {
+      if (fUser != null) {
+        firebaseUserUid = fUser.uid;
+
         push(context, HomePage(), replace: true);
       } else {
         push(context, LoginPage());
