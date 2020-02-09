@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:carros/cadastro/cadastro_page.dart';
+import 'package:carros/firebase.dart';
 import 'package:carros/firebase/firebase_service.dart';
 import 'package:carros/pages/api_response.dart';
 import 'package:carros/pages/carros/home_page.dart';
@@ -32,6 +33,8 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
+
+    initFcm();
   }
 
   @override
