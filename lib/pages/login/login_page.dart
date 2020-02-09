@@ -36,23 +36,11 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     super.initState();
 
-    //initFcm();
+    // Firebase Cloud Message - iniciando
+    initFcm();
 
-    // Remote config
-    RemoteConfig.instance.then((remoteConfig) {
-       remoteConfig.setConfigSettings(RemoteConfigSettings(debugMode: true));
-
-       try {
-         // Aplicativo em produção precisa ficar = 5 horas
-         remoteConfig.fetch(expiration: const Duration(minutes: 1));
-         remoteConfig.activateFetched();
-       } catch (error) {
-         print("Remote config: $error");
-       }
-       final mensagem = remoteConfig.getString("mensagem");
-
-       print("'Mensagem: $mensagem");
-    });
+    // Firebase Remote config
+    _firebaseRemoteConfig();
   }
 
   @override
@@ -195,5 +183,22 @@ class _LoginPageState extends State<LoginPage> {
 
   void _onClickCadastrar() {
     push(context, CadastroPage(), replace: true);
+  }
+
+  void _firebaseRemoteConfig() {
+    RemoteConfig.instance.then((remoteConfig) {
+      remoteConfig.setConfigSettings(RemoteConfigSettings(debugMode: true));
+
+      try {
+        // Aplicativo em produção precisa ficar = 5 horas
+        remoteConfig.fetch(expiration: const Duration(minutes: 1));
+        remoteConfig.activateFetched();
+      } catch (error) {
+        print("Remote config: $error");
+      }
+      final mensagem = remoteConfig.getString("mensagem");
+
+      print("'Mensagem: $mensagem");
+    });
   }
 }

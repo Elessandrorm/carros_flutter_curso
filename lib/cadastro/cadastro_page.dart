@@ -1,9 +1,13 @@
+import 'dart:io';
+
 import 'package:carros/firebase/firebase_service.dart';
 import 'package:carros/pages/carros/home_page.dart';
 import 'package:carros/pages/login/login_page.dart';
 import 'package:carros/utils/alert.dart';
 import 'package:carros/utils/nav.dart';
+import 'package:carros/widgets/app_text.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class CadastroPage extends StatefulWidget {
   @override
@@ -17,11 +21,16 @@ class _CadastroPageState extends State<CadastroPage> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  File _file;
+
+  final _focusNome = FocusNode();
+  final _focusEmail = FocusNode();
+  final _focusSenha = FocusNode();
+
   var _progress = false;
 
   void initState() {
     super.initState();
-
   }
 
   @override
@@ -39,74 +48,48 @@ class _CadastroPageState extends State<CadastroPage> {
   }
 
   _body(BuildContext context) {
-
     return Form(
       key: _formKey,
       child: ListView(
         children: <Widget>[
-          TextFormField(
+          _headerFoto(),
+          Text(
+            "Clique na imagem para tirar uma foto",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.grey,
+            ),
+          ),
+          Divider(),
+          AppText(
+            "Nome",
+            "Digite o seu nome",
             controller: _tNome,
+            keyboardType: TextInputType.text,
             validator: _validateNome,
-            keyboardType: TextInputType.text,
-            style: TextStyle(
-              color: Colors.blue,
-              fontSize: 22,
-            ),
-            decoration: InputDecoration(
-              labelText: "Nome",
-              labelStyle: TextStyle(
-                color: Colors.black,
-                fontSize: 22,
-              ),
-              hintText: "Digite o seu nome",
-              hintStyle: TextStyle(
-                color: Colors.black,
-                fontSize: 18,
-              ),
-            ),
+            textInputAction: TextInputAction.next,
+            focusNode: _focusNome,
+            nextFocus: _focusEmail,
           ),
-          TextFormField(
+          AppText(
+            "Email",
+            "Digite o seu email",
             controller: _tEmail,
-            validator: _validateLogin,
             keyboardType: TextInputType.text,
-            style: TextStyle(
-              color: Colors.blue,
-              fontSize: 22,
-            ),
-            decoration: InputDecoration(
-              labelText: "Email",
-              labelStyle: TextStyle(
-                color: Colors.black,
-                fontSize: 22,
-              ),
-              hintText: "Digite o seu email",
-              hintStyle: TextStyle(
-                color: Colors.black,
-                fontSize: 18,
-              ),
-            ),
+            validator: _validateLogin,
+            textInputAction: TextInputAction.next,
+            focusNode: _focusEmail,
+            nextFocus: _focusSenha,
           ),
-          TextFormField(
+          AppText(
+            "Senha",
+            "Digite a senha",
             controller: _tSenha,
-            validator: _validateSenha,
-            obscureText: true,
             keyboardType: TextInputType.number,
-            style: TextStyle(
-              color: Colors.blue,
-              fontSize: 22,
-            ),
-            decoration: InputDecoration(
-              labelText: "Senha",
-              labelStyle: TextStyle(
-                color: Colors.black,
-                fontSize: 22,
-              ),
-              hintText: "Digite a sua Senha",
-              hintStyle: TextStyle(
-                color: Colors.black,
-                fontSize: 18,
-              ),
-            ),
+            validator: _validateSenha,
+            focusNode: _focusSenha,
+            password: true,
           ),
           Container(
             height: 46,
@@ -115,15 +98,15 @@ class _CadastroPageState extends State<CadastroPage> {
               color: Colors.blue,
               child: _progress
                   ? CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation(Colors.white),
-              )
+                      valueColor: AlwaysStoppedAnimation(Colors.white),
+                    )
                   : Text(
-                "Cadastrar",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 22,
-                ),
-              ),
+                      "Cadastrar",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 22,
+                      ),
+                    ),
               onPressed: () {
                 _onClickCadastrar(context);
               },
@@ -179,7 +162,7 @@ class _CadastroPageState extends State<CadastroPage> {
   }
 
   _onClickCancelar(context) {
-    push(context,LoginPage(), replace: true);
+    push(context, LoginPage(), replace: true);
   }
 
   _onClickCadastrar(context) async {
@@ -200,10 +183,10 @@ class _CadastroPageState extends State<CadastroPage> {
     });
 
     final service = FirebaseService();
-    final response = await service.cadastrar(nome, email, senha);
+    final response = await service.cadastrar(nome, email, senha, file: _file);
 
     if (response.ok) {
-      push(context, HomePage(),replace:true);
+      push(context, HomePage(), replace: true);
     } else {
       alert(context, response.msg);
     }
@@ -211,5 +194,30 @@ class _CadastroPageState extends State<CadastroPage> {
     setState(() {
       _progress = false;
     });
+  }
+
+  _headerFoto() {
+    return InkWell(
+      onTap: _onClickFoto,
+      child: _file != null
+          ? Image.file(
+              _file,
+              height: 150,
+            )
+          : Image.asset(
+              "assets/images/camera.png",
+              height: 150,
+            ),
+    );
+  }
+
+  void _onClickFoto() async {
+    File file = await ImagePicker.pickImage(source: ImageSource.camera);
+    if (file != null) {
+      setState(() {
+        this._file = file;
+      });
+    }
+    FirebaseService.uploadFirebaseStorage(file);
   }
 }

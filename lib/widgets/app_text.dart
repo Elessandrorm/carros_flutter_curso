@@ -42,9 +42,9 @@ class AppText extends StatelessWidget {
         color: Colors.blue,
       ),
       decoration: InputDecoration(
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10)
-          ),
+        //  border: OutlineInputBorder(
+         //   borderRadius: BorderRadius.circular(10)
+         // ),
           labelText: label,
           labelStyle: TextStyle(fontSize: 25, color: Colors.grey),
           hintText: hint,
