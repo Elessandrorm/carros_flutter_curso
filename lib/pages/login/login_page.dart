@@ -11,8 +11,10 @@ import 'package:carros/utils/alert.dart';
 import 'package:carros/utils/nav.dart';
 import 'package:carros/widgets/app_button.dart';
 import 'package:carros/widgets/app_text.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -34,7 +36,23 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     super.initState();
 
-    initFcm();
+    //initFcm();
+
+    // Remote config
+    RemoteConfig.instance.then((remoteConfig) {
+       remoteConfig.setConfigSettings(RemoteConfigSettings(debugMode: true));
+
+       try {
+         // Aplicativo em produção precisa ficar = 5 horas
+         remoteConfig.fetch(expiration: const Duration(minutes: 1));
+         remoteConfig.activateFetched();
+       } catch (error) {
+         print("Remote config: $error");
+       }
+       final mensagem = remoteConfig.getString("mensagem");
+
+       print("'Mensagem: $mensagem");
+    });
   }
 
   @override
