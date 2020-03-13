@@ -1,0 +1,3 @@
+C:\dev\flutter\CursoFlutterEssencial\Carros\lib\* 
+C:\dev\flutter\CursoFlutterEssencial\Carros\assets\*  
+C:\dev\flutter\CursoFlutterEssencial\Carros\pubspec.yaml
